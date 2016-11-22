@@ -5,15 +5,20 @@ import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import { organization } from '../../../config'
 import { informalList } from '../../../helpers'
-import { Glyphicon, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { Glyphicon, OverlayTrigger } from 'react-bootstrap'
 import { tooltiptext } from '../../Tooltiptext'
-import Tooltipcomp from '../Tooltip'
-import FormattedMessage from '../FormattedMessage'
+import Tooltip from '../Tooltip'
+import {FormattedMessage} from 'react-intl'
 
 @observer
 class OtherChildren extends Component {
   @computed get nextText() {
-    return this.props.otherChildren.length ? 'Continue' : 'No other children'
+    return this.props.otherChildren.length ? undefined :
+           <FormattedMessage
+               id="app.slides.otherChildren.nextText"
+               description="Text to show on next slide button if no other children are added."
+               defaultMessage="No other children"
+           />
   }
 
   render() {
@@ -27,18 +32,18 @@ class OtherChildren extends Component {
         <FormattedMessage
               id="app.slides.otherChildren.intro"
               description="Introductory paragraph."
-              defaultMessage="Okay, it looks like we will need more information about your &nbsp;{tooltip}&nbsp;  and income in order to determine if you are eligible for benefits."
+              defaultMessage="Okay, it looks like we will need more information about your {tooltip} and income in order to determine if you are eligible for benefits."
               values={{
-                tooltip: <Tooltipcomp text={tooltiptext.householdreminder} >
+                tooltip: <Tooltip text={tooltiptext.householdreminder} >
                           <FormattedMessage
-                              id="app.slides.otherChildren.intro"
-                              description="Introductory paragraph."
+                              id="app.slides.otherChildren.introTooltip"
+                              description="household"
                               defaultMessage="household"
                           />
-                         </Tooltipcomp>
+                         </Tooltip>
               }}
           />
-          
+
         </p>
 
         <p>
@@ -55,8 +60,8 @@ class OtherChildren extends Component {
         <ul className="usa-content-list">
           <li>
           <FormattedMessage
-                id="app.slides.beforeYouBegin.eligibility1"
-                description="Eligibility List item"
+                id="app.slides.otherChildren.childType1"
+                description="Type of child to include in income reporting."
                 defaultMessage="students that are in grade 12 or below and attend school in a school district other than {organizationName}"
                 values={{
                 organizationName: organization.name
@@ -65,24 +70,29 @@ class OtherChildren extends Component {
           </li>
           <li>
           <FormattedMessage
-                id="app.slides.beforeYouBegin.eligibility1"
-                description="Eligibility List item"
+                id="app.slides.otherChildren.childType2"
+                description="Type of child to include in income reporting."
                 defaultMessage="children that attend day care or pre-school, or are not of school age, including infants"
             />
           </li>
           <li>
           <FormattedMessage
-                id="app.slides.beforeYouBegin.eligibility1"
-                description="Eligibility List item"
+                id="app.slides.otherChildren.childType3"
+                description="Type of child to include in income reporting."
                 defaultMessage="anyone 18 years of age or younger living in your household that does not currently attend school"
             />
           </li>
         </ul>
 
         <PersonCollection
-            label="Child"
-            labelPlural="other children"
             collection={otherChildren}
+            label={
+              <FormattedMessage
+                  id="app.slides.otherChildren.label"
+                  description="Label used for title, add/remove buttons."
+                  defaultMessage="Child"
+              />
+            }
         />
       </Slide>
     )

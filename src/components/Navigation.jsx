@@ -2,7 +2,7 @@
 import { observer } from 'mobx-react'
 import { Glyphicon, Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import { locales, organization } from '../config'
-import FormattedMessage from './application/FormattedMessage'
+import { FormattedMessage } from 'react-intl'
 import LocalePicker from './LocalePicker'
 
 @observer
@@ -56,6 +56,7 @@ class Navigation extends Component {
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav pullRight>
+            {/*
             <NavItem eventKey={2} onClick={this.handleData}>
               <Glyphicon glyph="list-alt" />&nbsp;
               <FormattedMessage
@@ -64,6 +65,7 @@ class Navigation extends Component {
                   defaultMessage="Data"
               />
             </NavItem>
+            */}
             <NavItem eventKey={1} onClick={this.handleHelp}>
               <Glyphicon glyph="question-sign" />&nbsp;
               <FormattedMessage

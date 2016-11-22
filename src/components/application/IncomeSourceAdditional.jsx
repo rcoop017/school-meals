@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { observer, observable} from 'mobx-react'
 import { hoursExceedPeriodCapacity } from '../../helpers'
+import { FormattedMessage } from 'react-intl'
 import BooleanRadio from './BooleanRadio'
 import Checkbox from './Checkbox'
 import Form from './Form'
@@ -9,58 +10,38 @@ import IncomeSourceFrequency from './IncomeSourceFrequency'
 import IncomeSourceHourlyPeriod from './IncomeSourceHourlyPeriod'
 import IncomeSourceSummary from './IncomeSourceSummary'
 import IncomeSource from './IncomeSource'
-
 import IncomeSourceSingle from './IncomeSourceSingle'
-
 import shortid from 'shortid'
 
 @observer
 class AdditionalIncome extends Component {
-
-  constructor (props) {
-    super(props)
+  constructor (props, context) {
+    super(props, context)
 
     this.onAddIncomeClick = this.onAddIncomeClick.bind(this)
     this.onDeleteIncomeClick = this.onDeleteIncomeClick.bind(this)
-
   }
 
-
   get error() {
-
     return null
   }
 
-
-
-  /*
-        Handle the event when user clicks the Add Income Source Button
-  */
+  // Handle the event when user clicks the Add Income Source Button
   onAddIncomeClick(){
-
     let incomeSource = this.props.incomeSource
 
     if (typeof(incomeSource.more) != "undefined") {
-
-      incomeSource.add(incomeSource)
-
+      this.context.applicationData.addIncomeSource(incomeSource)
     }
-
   }
 
-  /*
-        Handle the event when user clicks the Delete Income Source Button
-  */
+  // Handle the event when user clicks the Delete Income Source Button
   onDeleteIncomeClick(event){
-
     let incomeSource = this.props.incomeSource
-
     let i = event.target.id
 
-    incomeSource.remove(incomeSource, i)
+    this.context.applicationData.removeIncomeSource(incomeSource, i)
   }
-
-
 
   render() {
     const { name, showHourly, showAnnual } = this.props
@@ -97,12 +78,18 @@ class AdditionalIncome extends Component {
             {
               incomeSource.more.map( function(source, i) {
 
-                return (<div> <div style={{borderTop: "1px solid LightGray", marginTop: "10px", paddingTop: "10px"}} key={shortid.generate()}> <IncomeSourceSingle incomeSource={source} {...incomeSourceProps}/>  <button id={i} {...deleteButtonProps}>Remove</button> </div></div>)
+                return (<div key={shortid.generate()}> <div style={{borderTop: "1px solid LightGray", marginTop: "10px", paddingTop: "10px"}}> <IncomeSourceSingle incomeSource={source} {...incomeSourceProps}/>  <button id={i} {...deleteButtonProps}>Remove</button> </div></div>)
 
                 //return (<div key={shortid.generate()}> <IncomeSourceSingle incomeSource={source} {...incomeSourceProps}/>  <button id={i} {...deleteButtonProps}>Remove {i+2}</button> </div>)
               }, this)
             }
-            <button {...addButtonProps} >+ Add Income Source</button>
+            <button {...addButtonProps} >
+              + <FormattedMessage
+                    id="app.incomeSourceAdditional.addButton"
+                    description="Button text to add an income source"
+                    defaultMessage="Add Income Source"
+                />
+            </button>
           </div>
         }
       </div>
@@ -110,6 +97,8 @@ class AdditionalIncome extends Component {
   }
 }
 
-
+AdditionalIncome.contextTypes = {
+  applicationData: PropTypes.object.isRequired
+}
 
 export default AdditionalIncome

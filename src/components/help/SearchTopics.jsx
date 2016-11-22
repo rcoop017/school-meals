@@ -1,6 +1,6 @@
 import jQuery from 'jquery'
 import React, { Component, PropTypes } from 'react'
-import FormattedMessage from '../application/FormattedMessage'
+import {FormattedMessage} from 'react-intl'
 import All from './articles/All'
 
 class SearchTopics extends Component {
@@ -34,7 +34,7 @@ class SearchTopics extends Component {
     if (!!searchVal) {
       $container.show()
 
-      jQuery('ul.usa-accordion li', $container).each(function () {
+      jQuery('ul.usa-accordion > li', $container).each(function () {
         if (jQuery(this).text().search(new RegExp(searchVal, 'i')) < 0) {
           jQuery(this).hide()
         } else {

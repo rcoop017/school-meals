@@ -6,8 +6,8 @@ import BooleanRadio from '../BooleanRadio'
 import { observer } from 'mobx-react'
 import { organization } from '../../../config'
 import { tooltiptext } from '../../Tooltiptext'
-import Tooltipcomp from '../Tooltip'
-import FormattedMessage from '../FormattedMessage'
+import Tooltip from '../Tooltip'
+import {FormattedMessage} from 'react-intl'
 
 @observer
 class MilitaryIncome extends Component {
@@ -45,8 +45,14 @@ class MilitaryIncome extends Component {
            <IncomeTypeDefaultText person={person} />
 
            <IncomeSource incomeSources={incomeSources} name="basic">
-             <Tooltipcomp id="militaryBasicPay" text={tooltiptext.basicPay} target="Military basic pay" />
-             &nbsp; 
+             <Tooltip id="militaryBasicPay" text={tooltiptext.basicPay}>
+               <FormattedMessage
+                   id="app.slides.militaryIncome.basicPayTooltip"
+                   description="Military basic pay"
+                   defaultMessage="Military basic pay"
+               />
+             </Tooltip>
+             &nbsp;
               {incomeType.isDeployed ?
                 <span>
                 <FormattedMessage
@@ -63,36 +69,36 @@ class MilitaryIncome extends Component {
 
            <IncomeSource incomeSources={incomeSources} name="cashBonus">
            <FormattedMessage
-              id="app.slides.beforeYouBegin.householdPrograms"
-              description="Hist that you can skip most of application with a household program."
-              defaultMessage="Military &nbsp;{tooltip}"
+              id="app.slides.militaryIncome.cashBonus"
+              description="Military cash bonus"
+              defaultMessage="Military {tooltip}"
               values={{
                 tooltip:
-                        <Tooltipcomp text={tooltiptext.cashBonus}>
+                        <Tooltip text={tooltiptext.cashBonus}>
                           <FormattedMessage
-                            id="app.slides.militaryIncome.cashBonus"
+                            id="app.slides.militaryIncome.cashBonusTooltip"
                             description="cash bonus"
                             defaultMessage="cash bonus"
                           />
-                        </Tooltipcomp>
+                        </Tooltip>
               }}
           />
            </IncomeSource>
 
            <IncomeSource incomeSources={incomeSources} name="allowance">
            <FormattedMessage
-              id="app.slides.beforeYouBegin.householdPrograms"
-              description="Hist that you can skip most of application with a household program."
-              defaultMessage="Military &nbsp;{tooltip}&nbsp; for off-base housing, food, clothing (other than FSSA and MHPI)"
+              id="app.slides.militaryIncome.allowance"
+              description="Military allowance income"
+              defaultMessage="Military {tooltip} for off-base housing, food, clothing (other than FSSA and MHPI)"
               values={{
                 tooltip:
-                        <Tooltipcomp text={tooltiptext.allowances}>
+                        <Tooltip text={tooltiptext.allowances}>
                           <FormattedMessage
-                            id="app.slides.militaryIncome.allowances"
+                            id="app.slides.militaryIncome.allowanceTooltip"
                             description="allowance"
                             defaultMessage="allowance"
                           />
-                        </Tooltipcomp>
+                        </Tooltip>
               }}
           />
            </IncomeSource>

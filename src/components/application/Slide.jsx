@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import React, { Component, PropTypes } from 'react'
 import { observer } from 'mobx-react'
 import Button from './Button'
-import FormattedMessage from './FormattedMessage'
+import { FormattedMessage } from 'react-intl'
 
 @observer
 class Slide extends Component {
@@ -61,7 +61,15 @@ class Slide extends Component {
               <Button onClick={this.handleNext}
                       disabled={this.props.nextDisabled}>
                 {this.props.nextText}
-             </Button>
+              </Button>
+            }
+            {
+              this.props.showNext && this.props.nextDisabled &&
+              <span className="required-text hidden">
+                <strong>
+                  {this.props.helpText}
+                </strong>
+              </span>
             }
             {
               navigationData.canJump &&
@@ -120,6 +128,12 @@ Slide.defaultProps = {
         id="app.slide.nextButton"
         description="Default text for button to move forward a slide."
         defaultMessage="Continue"
+    />,
+  helpText:
+    <FormattedMessage
+        id="app.slide.helpText"
+        description="Default text to tell user that the current slide is incomplete."
+        defaultMessage="Please enter all required information above."
     />
 }
 

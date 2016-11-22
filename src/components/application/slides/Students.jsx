@@ -3,7 +3,7 @@ import Slide from '../Slide'
 import PersonCollection from '../PersonCollection'
 import { organization } from '../../../config'
 import { observer } from 'mobx-react'
-import FormattedMessage from '../FormattedMessage'
+import {FormattedMessage} from 'react-intl'
 
 @observer
 class Students extends Component {
@@ -24,9 +24,14 @@ class Students extends Component {
         </p>
 
         <PersonCollection
-            label="Student"
-            labelPlural="students"
             collection={students}
+            label={
+              <FormattedMessage
+                  id="app.slides.students.label"
+                  description="Label used for title, add/remove buttons."
+                  defaultMessage="Student"
+              />
+            }
         />
       </Slide>
     )

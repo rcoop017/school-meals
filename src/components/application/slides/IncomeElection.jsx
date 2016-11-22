@@ -4,10 +4,14 @@ import Slide from '../Slide'
 import { organization } from '../../../config'
 import { programDescription, toSentenceSerialArray } from '../../../helpers'
 import { observer } from 'mobx-react'
-import FormattedMessage from '../FormattedMessage'
+import {FormattedMessage} from 'react-intl'
 
 @observer
 class IncomeElection extends Component {
+  get isValid() {
+    return applicationData.electToProvideIncome != null
+  }
+
   render() {
     const { applicationData } = this.props
     const { allPeopleCollections, students } = applicationData
@@ -25,7 +29,7 @@ class IncomeElection extends Component {
     }).map(slug => programDescription(slug)), ', ', singular ? ' and ' : ' or ')
 
     return (
-      <Slide id="income-election">
+      <Slide nextDisabled={!this.isValid} id="income-election">
 
         <p className="usa-font-lead">
           You have indicated that&nbsp;
@@ -53,8 +57,19 @@ class IncomeElection extends Component {
         <BooleanRadio object={applicationData}
                       name="electToProvideIncome"
                       legend="Application options"
-                      trueLabel="Provide income information now"
-                      falseLabel="Submit my application without income information" />
+                      trueLabel={
+                        <FormattedMessage
+                            id="app.slides.incomeElection.electToProvideIncome.trueLabel"
+                            description="Option to provide household income now."
+                            defaultMessage="Provide income information now"
+                        />}
+                      falseLabel={
+                        <FormattedMessage
+                            id="app.slides.incomeElection.electToProvideIncome.falseLabel"
+                            description="Option to not provide household income now."
+                            defaultMessage="Submit my application without income information"
+                        />}
+        />
       </Slide>
     )
   }

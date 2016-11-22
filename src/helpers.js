@@ -2,8 +2,8 @@
 import { toSentenceSerial } from 'underscore.string'
 import { hmrPrograms } from './config'
 import { tooltiptext } from './components/Tooltiptext'
-import Tooltipcomp from './components/application/Tooltip'
-import { Glyphicon, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import Tooltip from './components/application/Tooltip'
+import { Glyphicon, OverlayTrigger } from 'react-bootstrap'
 
 export function schoolYear(startYear = new Date().getFullYear()) {
   return `${startYear}–${startYear + 1}`
@@ -142,8 +142,28 @@ export function hoursExceedPeriodCapacity(incomeSource) {
   }
 }
 
+function incomeSourceIsValid(incomeSource) {
+  return incomeSource.has === false ||
+         !!(
+             incomeSource.has &&
+             incomeSource.amount &&
+             incomeSource.frequency &&
+             (
+               incomeSource.frequency !== 'hourly' ||
+               (incomeSource.hourlyHours && incomeSource.hourlyPeriod &&
+                !hoursExceedPeriodCapacity(incomeSource))
+             ) &&
+             (
+               !incomeSource.more ||
+               incomeSource.more
+                           .map(moreSource => incomeSourceIsValid(moreSource))
+                           .reduce((a, b) => a && b, true)
+             )
+         )
+}
+
 export function incomeTypeIsValid(incomeType, mustNotBeNull = []) {
-  switch(incomeType.isApplicable) {
+  switch (incomeType.isApplicable) {
     case true:
       // Invalid if any of the non-nullable incomeType fields are null.
       if (mustNotBeNull.map(name => incomeType[name] == null)
@@ -163,24 +183,10 @@ export function incomeTypeIsValid(incomeType, mustNotBeNull = []) {
       }
 
       return incomeSources
-        .map(incomeSource => { return(
-          incomeSource.has === false ||
-          !!(
-            incomeSource.has &&
-            incomeSource.amount &&
-            incomeSource.frequency &&
-            (
-              incomeSource.frequency !== 'hourly' ||
-              (incomeSource.hourlyHours && incomeSource.hourlyPeriod &&
-               !hoursExceedPeriodCapacity(incomeSource))
-            )
-          )
-        )})
+        .map(incomeSource => incomeSourceIsValid(incomeSource))
         .reduce((a, b) => a && b, true)
-      break
     case false:
       return true
-      break
     default:
       return false
   }
@@ -222,9 +228,9 @@ export function allStudentsAreFoster(students) {
 export function programDescription(slug) {
   return {
     isFoster: 'live with you under a formal (court-ordered) foster care arrangement',
-    isHomeless: <span key="mckinney">receive assistance under the <Tooltipcomp id="mckinney" text={tooltiptext.mckinney} target={hmrPrograms.mckinney.shortName} /></span>,
-    isMigrant: <span key="mep">participate in the {hmrPrograms.mep.fullName} (<Tooltipcomp id="migrant" text={tooltiptext.mep} target={hmrPrograms.mep.accronym} />)</span>,
-    isRunaway: <span key="runaway">participate in a program under the <Tooltipcomp id="runaway" text={tooltiptext.runaway} target={hmrPrograms.runaway} /></span>,
+    isHomeless: <span key="mckinney">receive assistance under the <Tooltip id="mckinney" text={tooltiptext.mckinney} target={hmrPrograms.mckinney.shortName} /></span>,
+    isMigrant: <span key="mep">participate in the {hmrPrograms.mep.fullName} (<Tooltip id="migrant" text={tooltiptext.mep} target={hmrPrograms.mep.accronym} />)</span>,
+    isRunaway: <span key="runaway">participate in a program under the <Tooltip id="runaway" text={tooltiptext.runaway} target={hmrPrograms.runaway} /></span>,
   }[slug]
 }
 
@@ -284,29 +290,25 @@ export function applicableIncomeSources(person) {
         hourlyPeriod: source.hourlyPeriod
       })
 
-      // New code to add additional income sources to the total
+      // Add additional income sources to the total
       // User can add additional income for each sourceKey in UI
       // Example: User has 2 Salary/Wage jobs -- Uber and Waiter
-      // This code looks to see if user "hasMore" if so loops through "more" array
-      // for the particular income source
 
-      if (source.hasMore) {
-        for (let i = 0, len = source.more.length; i < len; i++){
-          let moreIncome = source.more[i]
+      for (let i = 0, len = source.more.length; i < len; i++){
+        let moreIncome = source.more[i]
 
-          result.push({
-            source: sourceKey,
-            type: type,
-            num: i + 1, // needed for printing summary later
-            amount: moreIncome.amount,
-            frequency: moreIncome.frequency,
-            hourlyHours: moreIncome.hourlyHours,
-            hourlyPeriod: moreIncome.hourlyPeriod
-          })
-        }
+        result.push({
+          source: sourceKey,
+          type: type,
+          num: i + 1, // needed for printing summary later
+          amount: moreIncome.amount,
+          frequency: moreIncome.frequency,
+          hourlyHours: moreIncome.hourlyHours,
+          hourlyPeriod: moreIncome.hourlyPeriod
+        })
       }
     }
   }
-console.debug(`applicableIncomeSources(${person.id}):`, result)
+
   return result
 }

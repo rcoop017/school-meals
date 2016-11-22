@@ -6,7 +6,7 @@ import IncomeTypeDefaultText from './IncomeTypeDefaultText'
 import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import { incomeTypeIsValid, informalName } from '../../../helpers'
-import FormattedMessage from '../FormattedMessage'
+import {FormattedMessage} from 'react-intl'
 
 @observer
 class IncomeType extends Component {
@@ -28,6 +28,13 @@ class IncomeType extends Component {
     const incomeType = person.incomeTypes[name]
     const defaultTextProps = { person, showMilitaryCaveat }
     const personName = informalName(person)
+    const missingIncomeTitle =
+      <FormattedMessage
+          id="app.slides.incomeType.missingIncomeTitle"
+          description="Missing Income alert title"
+          defaultMessage="Missing Income"
+      />
+
     return(
       <Slide header={personName}
              id={`income/${person.id}/${name}`}
@@ -37,24 +44,24 @@ class IncomeType extends Component {
         {this.props.children}
 
         { this.allSourcesFalse &&
-          <Alert heading="Missing Income">
-          <FormattedMessage
-              id="app.slides.incomeType.missingIncome"
-              description="Missing Income Alert"
-              defaultMessage="On a previous page, you indicated that {adult} receives income from one of the above sources. Please enter this income above or correct your previous answer."
-              values={{
-                adult: <strong>{personName}</strong>
-              }}
-          />
+          <Alert heading={missingIncomeTitle}>
+            <FormattedMessage
+                id="app.slides.incomeType.missingIncome"
+                description="Missing Income Alert"
+                defaultMessage="On a previous page, you indicated that {adult} receives income from one of the above sources. Please enter this income above or correct your previous answer."
+                values={{
+                  adult: <strong>{personName}</strong>
+                }}
+            />
             <br />
             <Button slideId={`income/${person.id}`}
                     className="usa-button-gray">
-                    <FormattedMessage
-                      id="app.slides.incomeType.changeAnswer"
-                      description="Change previous answer"
-                      defaultMessage="Change previous answer"
-                    />
-                    </Button>
+              <FormattedMessage
+                  id="app.slides.incomeType.changeAnswer"
+                  description="Change previous answer"
+                  defaultMessage="Change previous answer"
+              />
+            </Button>
           </Alert>
         }
       </Slide>

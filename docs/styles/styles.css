@@ -74,6 +74,11 @@ select.usa-input-success {
   color: black;
 }
 
+.usa-label,
+.usa-label-big {
+  white-space: nowrap;
+}
+
 .lowercase {
   text-transform: lowercase;
 }
@@ -103,13 +108,14 @@ footer .not-real-disclaimer {
 .info-target {
   border-bottom: 1px dotted #337ab7;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .info-target .glyphicon {
   color: #337ab7;
   left: .2em;
   top: .1em;
-  padding-right: .1em;
+  padding-right: .2em;
 }
 
 .slide {
@@ -157,6 +163,10 @@ footer .not-real-disclaimer {
 .slide-content footer {
   line-height: 0;
   margin-bottom: 1em;
+}
+
+.slide-content footer .required-text {
+  color: #cb232d;
 }
 
 .remove-person {
@@ -303,6 +313,7 @@ footer .not-real-disclaimer {
 
 nav .glyphicon {
   top: 2px;
+  color: #e31c3d;
 }
 
 nav li::before,
@@ -378,4 +389,8 @@ button.usa-button-secondary.add-income {
 
 button.usa-button-secondary.add-income:hover {
   background-color: #046b99;
+}
+
+.usa-input-error label {
+  width: calc(100% + 1.9rem);
 }
